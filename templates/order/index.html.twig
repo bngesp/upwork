@@ -6,7 +6,23 @@
 
 {% block body %}
     <div class="container">
-        <h1>Liste des commandes</h1>
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <h1>List Orders</h1>
+        <!-- Search -->
+        <form method="GET" action="{{ path('home_orders') }}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="search" value="{{ app.request.query.get('search') }}" class="form-control" placeholder="Rechercher une commande par client ou statut">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -35,13 +51,15 @@
                     <td>{{ order.amount }}</td>
                     <td>{{ order.status }}</td>
                     <td>
-                        <!-- Ajoutez les actions ici (par exemple, un bouton pour annuler la commande) -->
+                        <form action="{{ path('order_cancel', {'id': order.id}) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('cancel_order_' ~ order.id) }}">
+                            <button type="submit" class="btn btn-danger">Annuler</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-
         {{ knp_pagination_render(orders) }}
     </div>
 {% endblock %}

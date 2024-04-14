@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Domain\Entity\Order;
+use App\Domain\Service\OrderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,33 +13,33 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class OrderController extends AbstractController
 {
-    #[Route('/orders', name: 'home_orders')]
-    public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+    private EntityManagerInterface $entityManager;
+
+    private OrderService $orderService;
+    public function __construct(EntityManagerInterface $entityManager, OrderService $orderService)
     {
+        $this->entityManager = $entityManager;
+        $this->orderService = $orderService;
+    }
+
+    #[Route('/orders', name: 'home_orders')]
+    public function index(Request $request): Response
+    {
+        $search = $request->query->get('search', '');
         $page = $request->query->getInt('page', 1);
-
-        $orderRepository = $entityManager->getRepository(Order::class);
-        $query = $orderRepository->createQueryBuilder('o')
-            ->getQuery();
-
-        $orders = $paginator->paginate($query, $page, 10);
-
-        return $this->render('order/index.html.twig', [
-            'orders' => $orders,
-        ]);
+        $orders = $this->orderService->searchOrders($search, $page);
+        return $this->render('order/index.html.twig', ['orders' => $orders]);
     }
 
     #[Route('/orders/cancel/{id}', name: 'order_cancel', methods: ['POST'])]
-    public function cancelOrder(int $id, EntityManagerInterface $entityManager): Response
+    public function cancelOrder(int $id, Request $request ): Response
     {
-        $order = $entityManager->getRepository(Order::class)->find($id);
-
-        if (!$order) {
-            return $this->redirectToRoute('order_index')->with('error', 'Commande non trouvée');
+        try {
+            $this->orderService->cancelOrder($id);
+            $this->addFlash('success', 'Commande annulée avec succès');
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
-        $order->setStatus('cancelled');
-        $entityManager->flush();
-
-        return $this->redirectToRoute('order_index')->with('success', 'Commande annulée avec succès');
+        return $this->redirectToRoute('home_orders');
     }
 }

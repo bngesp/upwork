@@ -8,19 +8,24 @@
 
 namespace App\Domain\Service;
 
+use AllowDynamicProperties;
 use App\Domain\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
+#[AllowDynamicProperties]
 class OrderService
 {
     private OrderRepository $orderRepository;
     private EntityManagerInterface $entityManager;
+    private PaginatorInterface $paginator;
 
-    public function __construct(EntityManagerInterface $entityManager, OrderService $orderService)
+    public function __construct(OrderRepository $orderRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator)
     {
-        parent::__construct();
+        $this->orderRepository = $orderRepository;
         $this->entityManager = $entityManager;
-        $this->orderService = $orderService;
+        $this->paginator = $paginator;
     }
 
     public function cancelOrder(int $id): void
@@ -33,6 +38,18 @@ class OrderService
         } else {
             throw new \Exception('Commande non trouvée');
         }
+    }
+
+    public function searchOrders(string $search, int $page): PaginationInterface
+    {
+        $queryBuilder = $this->orderRepository->createQueryBuilder('o');
+        if ($search) {
+            $queryBuilder
+                ->where('o.customer LIKE :search OR o.status LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+        $query = $queryBuilder->getQuery();
+        return $this->paginator->paginate($query, $page, 10);
     }
 
 }
