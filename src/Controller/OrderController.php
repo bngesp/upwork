@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
+use App\Domain\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,5 +26,19 @@ class OrderController extends AbstractController
         return $this->render('order/index.html.twig', [
             'orders' => $orders,
         ]);
+    }
+
+    #[Route('/orders/cancel/{id}', name: 'order_cancel', methods: ['POST'])]
+    public function cancelOrder(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $order = $entityManager->getRepository(Order::class)->find($id);
+
+        if (!$order) {
+            return $this->redirectToRoute('order_index')->with('error', 'Commande non trouvée');
+        }
+        $order->setStatus('cancelled');
+        $entityManager->flush();
+
+        return $this->redirectToRoute('order_index')->with('success', 'Commande annulée avec succès');
     }
 }

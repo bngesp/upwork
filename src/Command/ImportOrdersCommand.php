@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\Order;
+use App\Domain\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
