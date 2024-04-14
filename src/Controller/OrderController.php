@@ -25,9 +25,7 @@ class OrderController extends AbstractController
     #[Route('/orders', name: 'home_orders')]
     public function index(Request $request): Response
     {
-        $search = $request->query->get('search', '');
-        $page = $request->query->getInt('page', 1);
-        $orders = $this->orderService->searchOrders($search, $page);
+        $orders = $this->orderService->searchOrders($request->query->get('search', ''), $request->query->getInt('page', 1));
         return $this->render('order/index.html.twig', ['orders' => $orders]);
     }
 
