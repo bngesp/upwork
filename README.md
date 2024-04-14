@@ -17,4 +17,10 @@ Make sure you will use it to structure your code from the test project.
 
 ## Result
 
+### Load data from orders.json
+```bash
+symfony console make:command import:orders
+```
+
+### Image of the result
 ![Image of the result](fig.png)
