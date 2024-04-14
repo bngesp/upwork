@@ -51,7 +51,6 @@ class ImportOrdersCommand extends Command
     private function initOrder($data): ?Order
    {
        $order = new Order();
-       $order->setId($data['id']);
        $order->setDate(new \DateTime($data['date']));
        $order->setCustomer($data['customer']);
        $order->setAddress1($data['address1']);

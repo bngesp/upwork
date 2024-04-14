@@ -1,0 +1,47 @@
+{# templates/order/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %} Orders {% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des commandes</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th>Code postal</th>
+                <th>Pays</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ order.customer }}</td>
+                    <td>{{ order.address1 }}</td>
+                    <td>{{ order.city }}</td>
+                    <td>{{ order.postcode }}</td>
+                    <td>{{ order.country }}</td>
+                    <td>{{ order.amount }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>
+                        <!-- Ajoutez les actions ici (par exemple, un bouton pour annuler la commande) -->
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ knp_pagination_render(orders) }}
+    </div>
+{% endblock %}
