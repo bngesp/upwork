@@ -13,3 +13,8 @@ Create a small Symfony 4 + Angular app for orders management (using data from or
 ## Important!
 Experience with Domain Driven Design (DDD) architecture is a must.
 Make sure you will use it to structure your code from the test project.
+
+
+## Result
+
+![Image of the result](fig.png)
