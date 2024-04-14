@@ -23,10 +23,8 @@ class OrderController extends AbstractController
 
         $orders = $paginator->paginate($query, $page, 10);
 
-        $el = $this->renderView('order/index.html.twig', [
+        return $this->render('order/index.html.twig', [
             'orders' => $orders,
         ]);
-
-        return new Response($el);
     }
 }
