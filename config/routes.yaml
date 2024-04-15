@@ -6,7 +6,7 @@ controllers:
 
 order_index:
     path: /api/orders
-    controller: App\Controller\OrderController::index
+    controller: App\Controller\OrderApiController::index
     methods: [GET]
     defaults:
         _format: json

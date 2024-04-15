@@ -2,7 +2,7 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Repository\OrderRepository;
+use App\Repository\OrderRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

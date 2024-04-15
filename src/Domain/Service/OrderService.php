@@ -10,8 +10,8 @@ namespace App\Domain\Service;
 
 use AllowDynamicProperties;
 use App\Domain\Constant\OrderConstant;
-use App\Domain\Entity\Order;
-use App\Domain\Repository\OrderRepository;
+use App\Entity\Order;
+use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
