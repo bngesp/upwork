@@ -3,3 +3,10 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+order_index:
+    path: /api/orders
+    controller: App\Controller\OrderController::index
+    methods: [GET]
+    defaults:
+        _format: json
