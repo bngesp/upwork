@@ -22,5 +22,14 @@ Make sure you will use it to structure your code from the test project.
 symfony console make:command import:orders
 ```
 
-### Image of the result
-![Image of the result](fig.png)
+### Image of the result for twig version
+![Image of the twig result](fig.png)
+
+### Angular version
+```bash
+cd webapp
+npm start
+```
+
+### Image of the result for angular version
+![Image of the result](ang.png)
