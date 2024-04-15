@@ -9,6 +9,8 @@
 namespace App\Domain\Service;
 
 use AllowDynamicProperties;
+use App\Domain\Constant\OrderConstant;
+use App\Domain\Entity\Order;
 use App\Domain\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -36,7 +38,7 @@ class OrderService
             $order->setStatus('cancelled');
             $this->entityManager->flush();
         } else {
-            throw new \Exception('Commande non trouvée');
+            throw new \Exception('Command not found');
         }
     }
 
@@ -50,6 +52,22 @@ class OrderService
         }
         $query = $queryBuilder->getQuery();
         return $this->paginator->paginate($query, $page, 10);
+    }
+
+    public static function getNewOrder($data): ?Order
+    {
+        $order = new Order();
+        $order->setDate(new \DateTime($data[OrderConstant::DATE]));
+        $order->setCustomer($data[OrderConstant::CUSTOMER]);
+        $order->setAddress1($data[OrderConstant::ADDRESS1]);
+        $order->setCity($data[OrderConstant::CITY]);
+        $order->setPostcode($data[OrderConstant::POSTCODE]);
+        $order->setCountry($data[OrderConstant::COUNTRY]);
+        $order->setAmount($data[OrderConstant::AMOUNT]);
+        $order->setStatus($data[OrderConstant::STATUS]);
+        $order->setDeleted($data[OrderConstant::DELETED]);
+        $order->setLastModified(new \DateTime($data[OrderConstant::LASTMODIFIED]));
+        return $order;
     }
 
 }

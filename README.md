@@ -1,6 +1,6 @@
 # UpWork Task
 
-## DEscription 
+## Description 
 Create a small Symfony 4 + Angular app for orders management (using data from orders.json)
 
 ## Requirements

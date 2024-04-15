@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Domain\Entity\Order;
+use App\Domain\Service\OrderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,9 +21,9 @@ class ImportOrdersCommand extends Command
 
    public function __construct(EntityManagerInterface $entityManager, KernelInterface $kernel)
    {
+       parent::__construct();
        $this->entityManager = $entityManager;
        $this->kernel = $kernel;
-       parent::__construct();
    }
 
    protected function execute(InputInterface $input, OutputInterface $output): int
@@ -36,7 +36,7 @@ class ImportOrdersCommand extends Command
        }
 
        array_map(function($order) {
-           $order = $this->initOrder($order);
+           $order = OrderService::getNewOrder($order);
            $this->entityManager->persist($order);
        }, $data);
 
@@ -45,23 +45,4 @@ class ImportOrdersCommand extends Command
          return Command::SUCCESS;
    }
 
-    /**
-     * @throws \Exception
-     */
-    private function initOrder($data): ?Order
-   {
-       $order = new Order();
-       $order->setDate(new \DateTime($data['date']));
-       $order->setCustomer($data['customer']);
-       $order->setAddress1($data['address1']);
-       $order->setCity($data['city']);
-       $order->setPostcode($data['postcode']);
-       $order->setCountry($data['country']);
-       $order->setAmount($data['amount']);
-       $order->setStatus($data['status']);
-       $order->setDeleted($data['deleted']);
-       $order->setLastModified(new \DateTime($data['last_modified']));
-
-       return $order;
-   }
 }
